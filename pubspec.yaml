@@ -1,0 +1,18 @@
+name: routing_path
+description: A lightweight path routing system
+version: 0.0.1
+homepage: https://pub.dev/packages/routing_path
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  mockito: ^4.1.0
+
+flutter:
