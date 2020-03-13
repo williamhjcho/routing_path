@@ -3,16 +3,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:routing_path/routing_path.dart';
 
-class MockRouteBuilder extends Mock implements NavigationRouteHandler {
-  @override
-  Route<dynamic> buildRoute(String path, [RouteArguments arguments]);
-}
+import 'utils.dart';
 
 class _SimpleVisualRouteHandler extends NavigationRouteHandler {
   _SimpleVisualRouteHandler([GlobalKey<NavigatorState> navigatorKey])
       : super(navigatorKey: navigatorKey);
 
-  final MockRouteBuilder mock = MockRouteBuilder();
+  final MockNavigationRouteHandler mock = MockNavigationRouteHandler();
 
   @override
   bool canOpen(String path) => mock.canOpen(path);
