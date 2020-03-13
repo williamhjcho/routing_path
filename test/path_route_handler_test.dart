@@ -26,6 +26,10 @@ void main() {
     route = _ConcretePathRouteHandler('/path/:id/:name');
   });
 
+  test('given null path', () {
+    expect(() => _ConcretePathRouteHandler(null), throwsAssertionError);
+  });
+
   group('#canOpen', () {
     test('given valid paths', () {
       expect(route.canOpen('/path/123/my_route'), isTrue);
