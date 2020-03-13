@@ -1,4 +1,3 @@
-import 'errors.dart';
 import 'route_arguments.dart';
 import 'route_handler.dart';
 import 'utils/path_matcher.dart';
@@ -7,45 +6,53 @@ import 'utils/path_matcher.dart';
 /// pattern for it.
 ///
 /// For example, when taking a path of type `/path/:id/to/:name`, it'll match
-/// `/path/123/to/some-name` and add the named variables into the
-/// [RouteArguments] in [openPath].
+/// `/path/123/to/some-name`, to use the arguments captured, call
+/// [replaceMatches] inside [open].
 ///
 /// See also:
 ///
-/// * [VisualRouteHandler] the base visual route handler
-abstract class PathRouteHandler implements RouteHandler {
-  PathRouteHandler(this.path, [String variablePattern])
+/// * [NavigationRouteHandler] the base visual route handler
+/// * [PathRouteHandlerMixin] for the core implementation
+abstract class PathRouteHandler with PathRouteHandlerMixin {
+  PathRouteHandler(String path, [String variablePattern])
       : assert(path != null),
-        _pattern = buildPathPattern(path, variablePattern: variablePattern),
-        super();
+        super() {
+    setPattern(path, variablePattern);
+  }
+}
 
+/// The [PathRouteHandler] core implementation for [RouteHandler]s.
+mixin PathRouteHandlerMixin implements RouteHandler {
   /// The path pattern to be used for matching this route.
   ///
   /// Cannot be null and should have a pattern like
   /// `/path/:id/to/:name`
   ///
   /// A simple path with no names is also acceptable.
-  final String path;
-  final RegExp _pattern;
+  ///
+  /// Use [setPattern] to update its value
+  RegExp pattern;
 
-  @override
-  bool canOpen(String path) => pathMatches(_pattern, path) != null;
-
-  @override
-  Future<T> open<T>(String path, [RouteArguments arguments]) async {
-    final matches = pathMatches(_pattern, path);
-    if (matches == null) throw UnmatchedPathException(path, _pattern);
-
-    arguments ??= RouteArguments({});
-    return openPath(arguments..addAll(matches));
+  /// Updates the [pattern] given a [path] and its [variablePattern]s.
+  ///
+  /// [path] cannot be null.
+  void setPattern(String path, [String variablePattern]) {
+    assert(path != null);
+    pattern = buildPathPattern(path, variablePattern: variablePattern);
   }
 
-  /// Attempts to open this route with the matched [path].
+  @override
+  bool canOpen(String path) => pathMatches(pattern, path) != null;
+
+  /// Replaces the matches (if any) from [path] into [arguments].
   ///
-  /// The [arguments] may contain [path] named substitutions (as strings) and
-  /// whatever other arguments given when [Router] was called with.
-  ///
-  /// The [path] substitutions takes priority over previously declared
-  /// [arguments] values.
-  Future<T> openPath<T>(RouteArguments arguments);
+  /// If [arguments] is null, a new one is created.
+  RouteArguments replaceMatches(String path, RouteArguments arguments) {
+    final matches = pathMatches(pattern, path);
+    if (matches != null) {
+      arguments ??= RouteArguments({});
+      arguments.addAll(matches);
+    }
+    return arguments;
+  }
 }
