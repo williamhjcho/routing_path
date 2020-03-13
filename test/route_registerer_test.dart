@@ -2,12 +2,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:routing_path/routing_path.dart';
 
+import 'utils.dart';
+
 class MockRoute extends Mock implements RouteHandler {}
 
 void main() {
   const path = '/path';
-
-  final throwsRouteNotFoundException = throwsA(isA<RouteNotFoundException>());
 
   RouteRegisterer registerer;
 
@@ -111,7 +111,7 @@ void main() {
     test('when no routes are registered', () {
       expect(
         registerer.open<dynamic>(path),
-        throwsRouteNotFoundException,
+        throwsUnregisteredRouteException,
       );
     });
 
@@ -120,7 +120,7 @@ void main() {
       registerer.register(route);
       expect(
         () => registerer.open<dynamic>(path),
-        throwsRouteNotFoundException,
+        throwsUnregisteredRouteException,
       );
     });
 

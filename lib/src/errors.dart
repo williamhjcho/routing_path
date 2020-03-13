@@ -1,12 +1,12 @@
-import '../routing_path.dart';
+import 'route_arguments.dart';
 
 /// Exception thrown when attempting to open a route but none registered were
 /// capable of opening it.
 ///
 /// See [Router] and [RouteHandler] for more information about how to go about
 /// registering and opening routes.
-class RouteNotFoundException implements Exception {
-  const RouteNotFoundException(this.route, [this.arguments])
+class UnregisteredRouteException implements Exception {
+  const UnregisteredRouteException(this.route, [this.arguments])
       : assert(route != null);
 
   /// The route that was attempted to be opened.

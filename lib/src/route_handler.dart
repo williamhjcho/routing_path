@@ -104,7 +104,7 @@ mixin RouteRegistererMixin implements RouteHandler {
   /// The [arguments] can be null and will be given to the registered route
   /// if it exists.
   ///
-  /// if a capable route isn't found throws a [RouteNotFoundException].
+  /// if a capable route isn't found throws a [UnregisteredRouteException].
   @override
   Future<T> open<T>(String path, [RouteArguments arguments]) async {
     final route = routes?.firstWhere(
@@ -112,7 +112,7 @@ mixin RouteRegistererMixin implements RouteHandler {
       orElse: () => null,
     );
     if (route == null) {
-      throw RouteNotFoundException(path, arguments);
+      throw UnregisteredRouteException(path, arguments);
     }
     return route.open(path, arguments);
   }

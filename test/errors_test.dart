@@ -2,22 +2,23 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:routing_path/routing_path.dart';
 
 void main() {
-  test('given null route', () {
-    expect(() => RouteNotFoundException(null), throwsAssertionError);
-  });
+  group('UnregisteredRouteException', () {
+    test('given null route', () {
+      expect(() => UnregisteredRouteException(null), throwsAssertionError);
+    });
+    test('#toString', () {
+      const route = '/path/to/somewhere';
 
-  test('#toString', () {
-    const route = '/path/to/somewhere';
+      expect(
+        const UnregisteredRouteException(route).toString(),
+        'RouteNotFoundException($route)',
+      );
 
-    expect(
-      const RouteNotFoundException(route).toString(),
-      'RouteNotFoundException($route)',
-    );
-
-    final arguments = RouteArguments({'some': 'arguments'});
-    expect(
-      RouteNotFoundException(route, arguments).toString(),
-      'RouteNotFoundException($route, arguments: $arguments)',
-    );
+      final arguments = RouteArguments({'some': 'arguments'});
+      expect(
+        UnregisteredRouteException(route, arguments).toString(),
+        'RouteNotFoundException($route, arguments: $arguments)',
+      );
+    });
   });
 }
