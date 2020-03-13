@@ -20,3 +20,20 @@ class UnregisteredRouteException implements Exception {
       ? 'RouteNotFoundException($route)'
       : 'RouteNotFoundException($route, arguments: $arguments)';
 }
+
+/// Exception thrown when attempting to open a route but it didn't actually
+/// matched the required path.
+///
+/// See [PathRouteHandler] on how it uses a path pattern.
+class UnmatchedPathException implements Exception {
+  UnmatchedPathException(this.path, this.pattern);
+
+  /// The path that was attempted to be opened.
+  final String path;
+
+  /// The pattern used to match the [path].
+  final Pattern pattern;
+
+  @override
+  String toString() => 'UnmatchedPathException($path, $pattern)';
+}
