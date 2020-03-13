@@ -1,3 +1,5 @@
 ## [0.0.1]
 
-* Initial commit
+* Adds core implementation
+* Adds regexp paths
+* Adds README
