@@ -12,3 +12,5 @@ final throwsUnmatchedPathException = throwsA(isUnmatchedPathException);
 
 class MockNavigationRouteHandler extends Mock
     implements NavigationRouteHandler {}
+
+class MockPathRouteHandler extends Mock implements PathRouteHandler {}
