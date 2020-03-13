@@ -18,7 +18,7 @@ import 'route_arguments.dart';
 ///
 /// See also:
 ///
-/// * [VisualRouteHandler] the base visual route handler
+/// * [NavigationRouteHandler] the base visual route handler
 /// * [PathRouteHandler] a patterned path route handler
 /// * [RouteRegisterer] the base route registerer
 /// * [Router] the base interface for opening a route
