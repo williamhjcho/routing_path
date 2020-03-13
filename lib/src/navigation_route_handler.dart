@@ -14,9 +14,8 @@ abstract class NavigationRouteHandler extends RouteHandler {
   /// to present the generated route from (defaults to [rootNavigatorKey]).
   /// After the [Route] pops it will wait [popDelay] before calling
   /// [SystemNavigator.pop] (can be null).
-  NavigationRouteHandler({
-    GlobalKey<NavigatorState> navigatorKey,
-  })  : _navigatorKey = navigatorKey,
+  NavigationRouteHandler({GlobalKey<NavigatorState> navigatorKey})
+      : _navigatorKey = navigatorKey,
         super();
 
   final GlobalKey<NavigatorState> _navigatorKey;
@@ -24,6 +23,7 @@ abstract class NavigationRouteHandler extends RouteHandler {
   @override
   Future<T> open<T>(String path, [RouteArguments arguments]) {
     final route = buildRoute(path, arguments);
+    assert(route != null);
     final navigator = _navigatorKey ?? rootNavigatorKey;
     // TODO: allow other presentation methods (replace, pop replace, etc)
     return navigator.currentState.push(route);
