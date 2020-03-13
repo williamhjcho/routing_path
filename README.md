@@ -20,7 +20,7 @@ In an app structure where you have a main application at root level:
     ...
 ```
 
-And you need a way for `feature_a` to start/open `feature_b`, you'd first need a common interface between them to make it work. 
+And you need a way for `feature_a` to start/open `feature_b`, you'd first need a common interface between them to make it work.
 
 And this is the main objective of `routing_path`:
 
@@ -75,7 +75,7 @@ class AppRouter extends Router with RouteRegistererMixin {
   final List<RouteHandler> routes = [
     // This is a simple list which will be checked when someone attempts
     // to open a route.
-    //    
+    //
     // Note that `Router` is also a `RouteHandler`, so there is a concept of
     // allowing nested `RouteHandlers`, you can even think of
     // them as nodes in a tree.
@@ -123,7 +123,7 @@ Then to open a route:
 Widget build(BuildContext context) {
   // (these lines could be inside a button tap callback for example)
 
-  // This returns a Future which you can listen to, or just ignore. 
+  // This returns a Future which you can listen to, or just ignore.
   // For example, to show an loading indicator.
   Router.of(context).open('/feature-a');
 
@@ -133,3 +133,71 @@ Widget build(BuildContext context) {
   // ...
 }
 ```
+
+## Special RouteHandlers
+
+- `NavigationRouteHandler`:
+  Is a `RouteHandler` that attempts to open a navigation `Route<T>`.
+
+  ```dart
+  class MyNavigationRoute extends NavigationRouteHandler {
+    @override
+    bool canOpen(String path) => path == '/feature-a';
+
+    @override
+    // Notice that the returning `Route` can have a definitive type if desired.
+    // Otherwise you can maintain it as a `Route` of dynamic type.
+    Route<void> buildRoute(String path, [RouteArguments arguments]) {
+      return MaterialPageRoute<void>(
+        builder: (context) {
+          return MyFeatureAScreen();
+        }
+      );
+    }
+  }
+  ```
+
+- `PathRouteHandler`:
+  Is a `RouteHandler` that has a `RegExp` path matcher, able to replace the variables as needed.
+
+  ```dart
+  class MyPathRoute extends PathRouteHandler {
+    MyPathRoute() : super('/path/to/:id');
+
+    // we don't need to implement `canOpen`, it is already being done on
+    // `PathRouteHandler`. In this case, it'll match anything similar to
+    // `/path/to/:id`, where `:id` is a path variable
+
+    @override
+    Future<T> open<T>(String path, [RouteArguments arguments]) {
+      // here we're updating  the arguments variable with the path variables
+      // (if any).
+      // If there were any values previously stored in arguments,
+      // they are still accessible, unless the name conflicts with the path
+      // variable (which will be overridden).
+      arguments = replaceMatches(path, arguments);
+
+      // do something ...
+    }
+  }
+  ```
+
+- Mixed `RouteHandlers`:
+  It is possible to mix the behavior from both `NavigationRouteHandler` and `PathRouteHandler`, by their `mixins` and/or interfaces.
+
+  ```dart
+  // Here we're using the `PathRouteHandler` interface
+  // with the `NavigationRouteHandlerMixin` to extend its functionality.
+  class MixedPathRoute extends PathRouteHandler with NavigationRouteHandlerMixin {
+    // the path matching behaves just like a `PathRouteHandler`
+    MixedPathRoute() : super('/path/to/:id');
+
+    @override
+    // and it is expected to return a navigation `Route`
+    Route buildRoute(String path, [RouteArguments arguments]) {
+      arguments = replaceMatches(path, arguments);
+
+      // do something ...
+    }
+  }
+  ```

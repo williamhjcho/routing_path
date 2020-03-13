@@ -3,16 +3,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:routing_path/routing_path.dart';
 
-class MockRouteBuilder extends Mock implements NavigationRouteHandler {
-  @override
-  Route<dynamic> buildRoute(String path, [RouteArguments arguments]);
-}
+import 'utils.dart';
 
-class _SimpleVisualRouteHandler extends NavigationRouteHandler {
-  _SimpleVisualRouteHandler([GlobalKey<NavigatorState> navigatorKey])
+class _ConcreteRouteHandler extends NavigationRouteHandler {
+  _ConcreteRouteHandler([GlobalKey<NavigatorState> navigatorKey])
       : super(navigatorKey: navigatorKey);
 
-  final MockRouteBuilder mock = MockRouteBuilder();
+  final MockNavigationRouteHandler mock = MockNavigationRouteHandler();
 
   @override
   bool canOpen(String path) => mock.canOpen(path);
@@ -25,7 +22,7 @@ class _SimpleVisualRouteHandler extends NavigationRouteHandler {
 void main() {
   const path = '/some/path';
   GlobalKey<NavigatorState> navigatorKey;
-  _SimpleVisualRouteHandler route;
+  _ConcreteRouteHandler route;
 
   Widget _buildNavigator() => Directionality(
         textDirection: TextDirection.ltr,
@@ -43,7 +40,7 @@ void main() {
 
   group('#open', () {
     testWidgets('when buildRoute returns null', (tester) async {
-      route = _SimpleVisualRouteHandler(navigatorKey);
+      route = _ConcreteRouteHandler(navigatorKey);
       when(route.mock.buildRoute(any, any)).thenAnswer((_) => null);
 
       await tester.pumpWidget(_buildNavigator());
@@ -51,7 +48,7 @@ void main() {
     });
 
     testWidgets('given navigatorKey', (tester) async {
-      route = _SimpleVisualRouteHandler(navigatorKey);
+      route = _ConcreteRouteHandler(navigatorKey);
       when(route.mock.buildRoute(any, any)).thenAnswer(
         (_) => PageRouteBuilder<void>(
           pageBuilder: (context, anim1, anim2) => Container(),
@@ -68,7 +65,7 @@ void main() {
     });
 
     testWidgets('when rootNavigatorKey is changed', (tester) async {
-      route = _SimpleVisualRouteHandler();
+      route = _ConcreteRouteHandler();
       when(route.mock.buildRoute(any, any)).thenAnswer(
         (_) => PageRouteBuilder<void>(
           pageBuilder: (context, anim1, anim2) => Container(),

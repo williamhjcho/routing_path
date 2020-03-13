@@ -1,33 +1,31 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
 import 'package:routing_path/routing_path.dart';
 
 import 'utils.dart';
 
-class _MockPathRouteHandler extends Mock implements PathRouteHandler {
-  @override
-  Future<T> openPath<T>(RouteArguments arguments);
-}
+class _ConcreteRouteHandler extends PathRouteHandler {
+  _ConcreteRouteHandler(String path) : super(path);
 
-class _ConcretePathRouteHandler extends PathRouteHandler {
-  _ConcretePathRouteHandler(String path) : super(path);
-
-  final _MockPathRouteHandler mock = _MockPathRouteHandler();
+  final MockPathRouteHandler mock = MockPathRouteHandler();
 
   @override
-  Future<T> openPath<T>(RouteArguments arguments) =>
-      mock.openPath<T>(arguments);
+  Future<T> open<T>(String path, [RouteArguments arguments]) =>
+      mock.open(path, arguments);
 }
 
 void main() {
-  _ConcretePathRouteHandler route;
+  _ConcreteRouteHandler route;
 
   setUp(() {
-    route = _ConcretePathRouteHandler('/path/:id/:name');
+    route = _ConcreteRouteHandler('/path/:id/:name');
   });
 
   test('given null path', () {
-    expect(() => _ConcretePathRouteHandler(null), throwsAssertionError);
+    expect(() => _ConcreteRouteHandler(null), throwsAssertionError);
+  });
+
+  test('given a path', () {
+    expect(route.pattern, isNotNull);
   });
 
   group('#canOpen', () {
@@ -46,48 +44,72 @@ void main() {
     });
   });
 
-  group('#open', () {
-    const validPath = '/path/123/my_route';
-    const invalidPath = '/path';
-
-    test('given a valid path', () async {
-      await expectLater(route.open(validPath), completes);
-
-      final arguments = RouteArguments({'id': '123', 'name': 'my_route'});
-      verify(route.mock.openPath(arguments)).called(1);
+  group('#setPattern', () {
+    test('given a null path', () {
+      expect(() => route.setPattern(null), throwsAssertionError);
     });
 
-    test('given a valid path and unconflicting arguments', () async {
-      final initialArguments = RouteArguments({'some_argument': 123});
-      await expectLater(route.open(validPath, initialArguments), completes);
+    test('given a new path', () {
+      final currentPattern = route.pattern;
+      route.setPattern('/new/path');
+      expect(route.pattern, isNot(currentPattern));
+    });
+  });
 
-      final arguments = RouteArguments({
-        'id': '123',
-        'name': 'my_route',
-        'some_argument': 123,
+  group('#replaceMatches', () {
+    group('given a valid path', () {
+      const validPath = '/path/123/my_route';
+
+      test('and null arguments', () {
+        expect(
+          route.replaceMatches(validPath, null),
+          RouteArguments({'id': '123', 'name': 'my_route'}),
+        );
       });
-      verify(route.mock.openPath(arguments)).called(1);
+
+      test('and empty arguments', () {
+        expect(
+          route.replaceMatches(validPath, RouteArguments({})),
+          RouteArguments({'id': '123', 'name': 'my_route'}),
+        );
+      });
+
+      test('and populated arguments', () {
+        final initialArguments = RouteArguments({'some_argument': 123});
+        expect(
+          route.replaceMatches(validPath, initialArguments),
+          RouteArguments(
+              {'id': '123', 'name': 'my_route', 'some_argument': 123}),
+        );
+      });
+
+      test('and arguments with conflicting keys', () {
+        final initialArguments =
+            RouteArguments({'id': 999, 'name': 'initial name'});
+        expect(
+          route.replaceMatches(validPath, initialArguments),
+          RouteArguments({'id': '123', 'name': 'my_route'}),
+        );
+      });
     });
 
-    test('given a valid path and same named arguments', () async {
-      final initialArguments = RouteArguments({
-        'id': 999,
-        'name': 'initial name',
+    group('given an invalid path', () {
+      const invalidPath = '/path';
+
+      test('and null arguments', () {
+        expect(
+          route.replaceMatches(invalidPath, null),
+          isNull,
+        );
       });
-      await expectLater(route.open(validPath, initialArguments), completes);
 
-      // path matches take priority
-      final arguments = RouteArguments({
-        'id': '123',
-        'name': 'my_route',
+      test('and arguments', () {
+        final initialArguments = RouteArguments({'some': 'value'});
+        expect(
+          route.replaceMatches(invalidPath, initialArguments),
+          same(initialArguments),
+        );
       });
-      verify(route.mock.openPath(arguments)).called(1);
-    });
-
-    test('given an invalid path', () async {
-      await expectLater(route.open(invalidPath), throwsUnmatchedPathException);
-
-      verifyZeroInteractions(route.mock);
     });
   });
 }
