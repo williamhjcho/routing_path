@@ -7,9 +7,6 @@ import 'package:routing_path/routing_path.dart';
 final isUnregisteredRouteException = isA<UnregisteredRouteException>();
 final throwsUnregisteredRouteException = throwsA(isUnregisteredRouteException);
 
-final isUnmatchedPathException = isA<UnmatchedPathException>();
-final throwsUnmatchedPathException = throwsA(isUnmatchedPathException);
-
 class MockNavigationRouteHandler extends Mock
     implements NavigationRouteHandler {}
 
