@@ -1,6 +1,6 @@
 name: routing_path
 description: A lightweight path routing system
-version: 0.0.1+1
+version: 0.0.1+2
 homepage: https://github.com/williamhjcho/routing_path
 
 environment:

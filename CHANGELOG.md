@@ -9,3 +9,7 @@
 * Splits NavigationRouteHandler with a mixin
 * Splits PathRouteHandler with a mixin
 * Removes UnmatchedPathException
+
+## [0.0.1+2]
+
+* Adds example app
