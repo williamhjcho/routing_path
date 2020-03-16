@@ -99,12 +99,6 @@ AppRouter(
 // or
 
 MaterialApp(
-  home: AppRouter(child: ...),
-);
-
-// or
-
-MaterialApp(
   builder: (context, child) {
     // ...
     return AppRouter(child: child);
