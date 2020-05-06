@@ -1,8 +1,10 @@
-## [0.0.1]
+## [0.0.1+3]
 
-* Adds core implementation
-* Adds regexp paths
-* Adds README
+* Removes warnings for flutter stable 1.17
+
+## [0.0.1+2]
+
+* Adds example app
 
 ## [0.0.1+1]
 
@@ -10,6 +12,8 @@
 * Splits PathRouteHandler with a mixin
 * Removes UnmatchedPathException
 
-## [0.0.1+2]
+## [0.0.1]
 
-* Adds example app
+* Adds core implementation
+* Adds regexp paths
+* Adds README

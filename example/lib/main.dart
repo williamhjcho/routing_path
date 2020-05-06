@@ -63,7 +63,7 @@ class MainHomePage extends StatelessWidget {
               'Tap a button to open a feature flow (they are visually '
               'identical)',
               textAlign: TextAlign.justify,
-              style: theme.textTheme.body1,
+              style: theme.textTheme.bodyText2,
             ),
             const SizedBox(height: 24),
             OutlineButton(

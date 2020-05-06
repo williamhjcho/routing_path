@@ -61,7 +61,7 @@ void main() {
       verify(route.mock.buildRoute(path)).called(1);
 
       // should close the opened Route
-      expect(navigatorKey.currentState.pop(), isTrue);
+      expect(() => navigatorKey.currentState.pop(), returnsNormally);
     });
 
     testWidgets('when rootNavigatorKey is changed', (tester) async {
@@ -79,8 +79,8 @@ void main() {
 
       // should close the opened Route
       expect(
-        NavigationRouteHandler.rootNavigatorKey.currentState.pop(),
-        isTrue,
+        () => NavigationRouteHandler.rootNavigatorKey.currentState.pop(),
+        returnsNormally,
       );
     });
   });
