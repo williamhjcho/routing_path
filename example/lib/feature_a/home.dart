@@ -27,7 +27,7 @@ class FeatureAHomePage extends StatelessWidget {
                 '/feature-b',
                 RouteArguments({'opened_by': 'FEATURE A'}),
               ),
-              child: Text(
+              child: const Text(
                 'OPEN FEATURE B',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
