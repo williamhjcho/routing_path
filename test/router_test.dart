@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart' hide Router;
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:routing_path/routing_path.dart';
 
-class ConcreteRouter extends Router {
+class ConcreteRouter extends PathRouter {
   const ConcreteRouter({Key? key, required Widget child})
       : super(key: key, child: child);
 
@@ -35,12 +35,12 @@ void main() {
     testWidgets('when in hierarchy', (tester) async {
       final router = ConcreteRouter(child: builder);
       await tester.pumpWidget(router);
-      expect(Router.of(capturedContext!), same(router));
+      expect(PathRouter.of(capturedContext!), same(router));
     });
 
     testWidgets('when not in hierarchy', (tester) async {
       await tester.pumpWidget(builder);
-      expect(() => Router.of(capturedContext!), throwsFlutterError);
+      expect(() => PathRouter.of(capturedContext!), throwsFlutterError);
     });
 
     testWidgets('when there are multiple routers in the hierarchy',
@@ -57,8 +57,8 @@ void main() {
       }));
       await tester.pumpWidget(rootRouter);
 
-      expect(Router.of(rootContext), same(rootRouter));
-      expect(Router.of(subContext), same(subRouter));
+      expect(PathRouter.of(rootContext), same(rootRouter));
+      expect(PathRouter.of(subContext), same(subRouter));
     });
   });
 }

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart' hide Router;
+import 'package:flutter/material.dart';
 import 'package:routing_path/routing_path.dart';
 
 import 'feature_a/route.dart';
@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
 /// This is the main `Router` instance that will be inserted into the
 /// widget tree. It is responsible for registering and opening [RouteHandler]s
 /// when a `Router.of(context).open(...)` is called.
-class MainAppRouter extends Router with RouteRegistererMixin {
+class MainAppRouter extends PathRouter with RouteRegistererMixin {
   MainAppRouter({required Widget child}) : super(child: child);
 
   @override
@@ -71,7 +71,7 @@ class MainHomePage extends StatelessWidget {
                 foregroundColor:
                     MaterialStateProperty.all(Colors.deepPurpleAccent),
               ),
-              onPressed: () => Router.of(context).open(
+              onPressed: () => PathRouter.of(context).open(
                 '/feature-a',
                 RouteArguments({'opened_by': 'MAIN HOME'}),
               ),
@@ -84,7 +84,7 @@ class MainHomePage extends StatelessWidget {
               style: ButtonStyle(
                 foregroundColor: MaterialStateProperty.all(Colors.indigo),
               ),
-              onPressed: () => Router.of(context).open(
+              onPressed: () => PathRouter.of(context).open(
                 '/feature-b',
                 RouteArguments({'opened_by': 'MAIN HOME'}),
               ),

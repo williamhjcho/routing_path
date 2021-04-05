@@ -4,7 +4,7 @@ import 'route_handler.dart';
 
 /// The base interface for opening [RouteHandler]s.
 ///
-/// Usually there should be one [Router] instance declared close to the root
+/// Usually there should be one [PathRouter] instance declared close to the root
 /// widget to allow others to call any arbitrary routes from a [BuildContext].
 ///
 /// Typical usage is as follows:
@@ -12,8 +12,8 @@ import 'route_handler.dart';
 /// ```dart
 /// Router.of(context).open(...);
 /// ```
-abstract class Router extends StatelessWidget implements RouteHandler {
-  const Router({Key? key, required this.child}) : super(key: key);
+abstract class PathRouter extends StatelessWidget implements RouteHandler {
+  const PathRouter({Key? key, required this.child}) : super(key: key);
 
   /// {@macro flutter.widgets.child}
   final Widget child;
@@ -26,7 +26,7 @@ abstract class Router extends StatelessWidget implements RouteHandler {
   /// encloses the given [context].
   ///
   /// May return null if not found.
-  static Router of(BuildContext context) {
+  static PathRouter of(BuildContext context) {
     final inheritedRouter =
         context.dependOnInheritedWidgetOfExactType<_InheritedRouter>();
     assert(() {
@@ -43,7 +43,7 @@ abstract class Router extends StatelessWidget implements RouteHandler {
     return inheritedRouter!.router;
   }
 
-  static Router? maybeOf(BuildContext context) {
+  static PathRouter? maybeOf(BuildContext context) {
     final inheritedRouter =
         context.dependOnInheritedWidgetOfExactType<_InheritedRouter>();
     return inheritedRouter?.router;
@@ -57,7 +57,7 @@ class _InheritedRouter extends InheritedWidget {
     required Widget child,
   }) : super(key: key, child: child);
 
-  final Router router;
+  final PathRouter router;
 
   @override
   bool updateShouldNotify(_InheritedRouter oldWidget) =>

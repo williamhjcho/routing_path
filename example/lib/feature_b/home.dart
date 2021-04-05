@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart' hide Router;
+import 'package:flutter/material.dart';
 import 'package:routing_path/routing_path.dart';
 
 class FeatureBHomePage extends StatelessWidget {
@@ -26,7 +26,7 @@ class FeatureBHomePage extends StatelessWidget {
                 foregroundColor:
                     MaterialStateProperty.all(Colors.deepPurpleAccent),
               ),
-              onPressed: () => Router.of(context).open(
+              onPressed: () => PathRouter.of(context).open(
                 '/feature-a',
                 RouteArguments({'opened_by': 'FEATURE B'}),
               ),
