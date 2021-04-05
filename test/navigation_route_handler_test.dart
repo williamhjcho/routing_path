@@ -65,7 +65,10 @@ void main() {
           pageBuilder: (context, anim1, anim2) => Container(),
         ),
       );
+
+      final previousKey = NavigationRouteHandler.rootNavigatorKey;
       NavigationRouteHandler.rootNavigatorKey = navigatorKey;
+      addTearDown(() => NavigationRouteHandler.rootNavigatorKey = previousKey);
 
       await tester.pumpWidget(_buildNavigator());
       expect(route.open(path), completes);
@@ -76,6 +79,20 @@ void main() {
         () => NavigationRouteHandler.rootNavigatorKey.currentState!.pop(),
         returnsNormally,
       );
+    });
+
+    testWidgets('when there is no root navigator registered', (tester) async {
+      route = _ConcreteRouteHandler();
+      when(route.mock.buildRoute(any, any)).thenAnswer(
+        (_) => PageRouteBuilder<void>(
+          pageBuilder: (context, anim1, anim2) => Container(),
+        ),
+      );
+
+      // no navigators in hierarchy
+      await tester.pumpWidget(Container());
+      expect(() => route.open(path), throwsFlutterError);
+      await tester.pumpAndSettle();
     });
   });
 }

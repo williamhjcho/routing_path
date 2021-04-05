@@ -61,4 +61,35 @@ void main() {
       expect(PathRouter.of(subContext), same(subRouter));
     });
   });
+
+  group('.maybeOf', () {
+    testWidgets('when in hierarchy', (tester) async {
+      final router = ConcreteRouter(child: builder);
+      await tester.pumpWidget(router);
+      expect(PathRouter.maybeOf(capturedContext!), same(router));
+    });
+
+    testWidgets('when not in hierarchy', (tester) async {
+      await tester.pumpWidget(builder);
+      expect(PathRouter.maybeOf(capturedContext!), isNull);
+    });
+
+    testWidgets('when there are multiple routers in the hierarchy',
+        (tester) async {
+      late BuildContext rootContext, subContext;
+
+      final subRouter = ConcreteRouter(child: Builder(builder: (context) {
+        subContext = context;
+        return Container();
+      }));
+      final rootRouter = ConcreteRouter(child: Builder(builder: (context) {
+        rootContext = context;
+        return subRouter;
+      }));
+      await tester.pumpWidget(rootRouter);
+
+      expect(PathRouter.maybeOf(rootContext), same(rootRouter));
+      expect(PathRouter.maybeOf(subContext), same(subRouter));
+    });
+  });
 }
