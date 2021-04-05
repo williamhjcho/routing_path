@@ -23,14 +23,6 @@ class MockPathRouteHandler extends _i1.Mock implements _i2.PathRouteHandler {
   RegExp get pattern => (super.noSuchMethod(Invocation.getter(#pattern),
       returnValue: _FakeRegExp()) as RegExp);
   @override
-  set pattern(RegExp? _pattern) =>
-      super.noSuchMethod(Invocation.setter(#pattern, _pattern),
-          returnValueForMissingStub: null);
-  @override
-  void setPattern(String? path, [String? variablePattern]) => super
-      .noSuchMethod(Invocation.method(#setPattern, [path, variablePattern]),
-          returnValueForMissingStub: null);
-  @override
   bool canOpen(String? path) => (super
           .noSuchMethod(Invocation.method(#canOpen, [path]), returnValue: false)
       as bool);

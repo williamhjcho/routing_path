@@ -42,14 +42,6 @@ void main() {
     });
   });
 
-  group('#setPattern', () {
-    test('given a new path', () {
-      final currentPattern = route.pattern;
-      route.setPattern('/new/path');
-      expect(route.pattern, isNot(currentPattern));
-    });
-  });
-
   group('#replaceMatches', () {
     group('given a valid path', () {
       const validPath = '/path/123/my_route';

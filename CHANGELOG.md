@@ -2,6 +2,8 @@
 
 * Migrates to null-safety
 * Renames `Router -> PathRouter`
+* Refactors `PathRouteHandler.pattern`
+  Makes it a getter property initialized at constructor (final)
 
 ## [0.0.1+3]
 

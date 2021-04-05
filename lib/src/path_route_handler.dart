@@ -14,9 +14,12 @@ import 'utils/path_matcher.dart';
 /// * [NavigationRouteHandler] the base visual route handler
 /// * [PathRouteHandlerMixin] for the core implementation
 abstract class PathRouteHandler with PathRouteHandlerMixin {
-  PathRouteHandler(String path, [String? variablePattern]) : super() {
-    setPattern(path, variablePattern);
-  }
+  PathRouteHandler(String path, [String? variablePattern])
+      : pattern = buildPathPattern(path, variablePattern: variablePattern),
+        super();
+
+  @override
+  final RegExp pattern;
 }
 
 /// The [PathRouteHandler] core implementation for [RouteHandler]s.
@@ -27,16 +30,7 @@ mixin PathRouteHandlerMixin implements RouteHandler {
   /// `/path/:id/to/:name`
   ///
   /// A simple path with no names is also acceptable.
-  ///
-  /// Use [setPattern] to update its value
-  late RegExp pattern;
-
-  /// Updates the [pattern] given a [path] and its [variablePattern]s.
-  ///
-  /// [path] cannot be null.
-  void setPattern(String path, [String? variablePattern]) {
-    pattern = buildPathPattern(path, variablePattern: variablePattern);
-  }
+  RegExp get pattern;
 
   @override
   bool canOpen(String path) => pathMatches(pattern, path) != null;
