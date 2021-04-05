@@ -30,7 +30,7 @@ abstract class RouteHandler {
   ///
   /// The [arguments] can be null and will be given to the route if it is able
   /// to be opened.
-  Future<T> open<T>(String path, [RouteArguments arguments]);
+  Future<T?> open<T>(String path, [RouteArguments? arguments]);
 }
 
 /// Simple Route aggregator that keeps track of registered routes.
@@ -43,7 +43,7 @@ abstract class RouteHandler {
 /// * [RouteRegistererMixin] the mixin implementation for this registerer
 /// * [RouteHandler] the base route interface
 class RouteRegisterer with RouteRegistererMixin {
-  RouteRegisterer({List<RouteHandler> routes})
+  RouteRegisterer({List<RouteHandler>? routes})
       : routes = routes ?? [],
         super();
 
@@ -72,8 +72,6 @@ mixin RouteRegistererMixin implements RouteHandler {
   ///
   /// See [unregister] to unregister it.
   void register(RouteHandler route) {
-    assert(route != null);
-
     if (!routes.contains(route)) routes.add(route);
   }
 
@@ -86,17 +84,13 @@ mixin RouteRegistererMixin implements RouteHandler {
 
   @override
   bool canOpen(String path) {
-    final route = routes.firstWhere(
-      (route) {
-        try {
-          return route.canOpen(path);
-        } catch (_) {
-          return false;
-        }
-      },
-      orElse: () => null,
-    );
-    return route != null;
+    return routes.any((route) {
+      try {
+        return route.canOpen(path);
+      } catch (_) {
+        return false;
+      }
+    });
   }
 
   /// Attempts to open this route by finding the first capable registered route
@@ -107,14 +101,11 @@ mixin RouteRegistererMixin implements RouteHandler {
   ///
   /// if a capable route isn't found throws a [UnregisteredRouteException].
   @override
-  Future<T> open<T>(String path, [RouteArguments arguments]) async {
-    final route = routes?.firstWhere(
+  Future<T?> open<T>(String path, [RouteArguments? arguments]) async {
+    final route = routes.firstWhere(
       (route) => route.canOpen(path),
-      orElse: () => null,
+      orElse: () => throw UnregisteredRouteException(path, arguments),
     );
-    if (route == null) {
-      throw UnregisteredRouteException(path, arguments);
-    }
     return route.open(path, arguments);
   }
 }

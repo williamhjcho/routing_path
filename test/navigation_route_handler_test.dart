@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:routing_path/routing_path.dart';
 
-import 'utils.dart';
+import 'navigation_route_handler_test.mocks.dart';
 
 class _ConcreteRouteHandler extends NavigationRouteHandler {
-  _ConcreteRouteHandler([GlobalKey<NavigatorState> navigatorKey])
+  _ConcreteRouteHandler([GlobalKey<NavigatorState>? navigatorKey])
       : super(navigatorKey: navigatorKey);
 
   final MockNavigationRouteHandler mock = MockNavigationRouteHandler();
@@ -15,14 +16,15 @@ class _ConcreteRouteHandler extends NavigationRouteHandler {
   bool canOpen(String path) => mock.canOpen(path);
 
   @override
-  Route<dynamic> buildRoute(String path, [RouteArguments arguments]) =>
+  Route<T> buildRoute<T>(String path, [RouteArguments? arguments]) =>
       mock.buildRoute(path, arguments);
 }
 
+@GenerateMocks([NavigationRouteHandler])
 void main() {
   const path = '/some/path';
-  GlobalKey<NavigatorState> navigatorKey;
-  _ConcreteRouteHandler route;
+  late GlobalKey<NavigatorState> navigatorKey;
+  late _ConcreteRouteHandler route;
 
   Widget _buildNavigator() => Directionality(
         textDirection: TextDirection.ltr,
@@ -39,14 +41,6 @@ void main() {
   });
 
   group('#open', () {
-    testWidgets('when buildRoute returns null', (tester) async {
-      route = _ConcreteRouteHandler(navigatorKey);
-      when(route.mock.buildRoute(any, any)).thenAnswer((_) => null);
-
-      await tester.pumpWidget(_buildNavigator());
-      expect(() => route.open(path), throwsAssertionError);
-    });
-
     testWidgets('given navigatorKey', (tester) async {
       route = _ConcreteRouteHandler(navigatorKey);
       when(route.mock.buildRoute(any, any)).thenAnswer(
@@ -61,7 +55,7 @@ void main() {
       verify(route.mock.buildRoute(path)).called(1);
 
       // should close the opened Route
-      expect(() => navigatorKey.currentState.pop(), returnsNormally);
+      expect(() => navigatorKey.currentState!.pop(), returnsNormally);
     });
 
     testWidgets('when rootNavigatorKey is changed', (tester) async {
@@ -79,7 +73,7 @@ void main() {
 
       // should close the opened Route
       expect(
-        () => NavigationRouteHandler.rootNavigatorKey.currentState.pop(),
+        () => NavigationRouteHandler.rootNavigatorKey.currentState!.pop(),
         returnsNormally,
       );
     });

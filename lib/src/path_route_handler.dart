@@ -14,9 +14,7 @@ import 'utils/path_matcher.dart';
 /// * [NavigationRouteHandler] the base visual route handler
 /// * [PathRouteHandlerMixin] for the core implementation
 abstract class PathRouteHandler with PathRouteHandlerMixin {
-  PathRouteHandler(String path, [String variablePattern])
-      : assert(path != null),
-        super() {
+  PathRouteHandler(String path, [String? variablePattern]) : super() {
     setPattern(path, variablePattern);
   }
 }
@@ -31,13 +29,12 @@ mixin PathRouteHandlerMixin implements RouteHandler {
   /// A simple path with no names is also acceptable.
   ///
   /// Use [setPattern] to update its value
-  RegExp pattern;
+  late RegExp pattern;
 
   /// Updates the [pattern] given a [path] and its [variablePattern]s.
   ///
   /// [path] cannot be null.
-  void setPattern(String path, [String variablePattern]) {
-    assert(path != null);
+  void setPattern(String path, [String? variablePattern]) {
     pattern = buildPathPattern(path, variablePattern: variablePattern);
   }
 
@@ -47,7 +44,7 @@ mixin PathRouteHandlerMixin implements RouteHandler {
   /// Replaces the matches (if any) from [path] into [arguments].
   ///
   /// If [arguments] is null, a new one is created.
-  RouteArguments replaceMatches(String path, RouteArguments arguments) {
+  RouteArguments? replaceMatches(String path, RouteArguments? arguments) {
     final matches = pathMatches(pattern, path);
     if (matches != null) {
       arguments ??= RouteArguments({});

@@ -19,7 +19,7 @@ abstract class NavigationRouteHandler with NavigationRouteHandlerMixin {
   NavigationRouteHandler({this.navigatorKey}) : super();
 
   @override
-  final GlobalKey<NavigatorState> navigatorKey;
+  final GlobalKey<NavigatorState>? navigatorKey;
 
   /// This key is used as a fallback when the [NavigationRouteHandler] instance
   /// didn't receive a navigatorKey instance.
@@ -32,17 +32,27 @@ abstract class NavigationRouteHandler with NavigationRouteHandlerMixin {
 
 /// The [NavigationRouteHandler] core implementation for custom [RouteHandler]s
 mixin NavigationRouteHandlerMixin implements RouteHandler {
-  GlobalKey<NavigatorState> get navigatorKey => null;
+  GlobalKey<NavigatorState>? get navigatorKey => null;
 
   @override
-  Future<T> open<T>(String path, [RouteArguments arguments]) {
-    final route = buildRoute(path, arguments);
-    assert(route != null);
+  Future<T?> open<T>(String path, [RouteArguments? arguments]) {
+    final route = buildRoute<T>(path, arguments);
     final navigator = navigatorKey ?? NavigationRouteHandler.rootNavigatorKey;
     // TODO: allow other presentation methods (replace, pop replace, etc)
-    return navigator.currentState.push(route);
+    final navigatorState = navigator.currentState;
+    assert(() {
+      if (navigatorState == null) {
+        throw FlutterError(
+          'Tried to call $runtimeType.open($path, $arguments) with a null '
+          'Navigator.\n'
+          'Make sure it is on the widget tree',
+        );
+      }
+      return true;
+    }());
+    return navigatorState!.push<T?>(route);
   }
 
   /// Builds the [Route] which will be pushed on top of the navigator key.
-  Route<dynamic> buildRoute(String path, [RouteArguments arguments]);
+  Route<T> buildRoute<T>(String path, [RouteArguments? arguments]);
 }

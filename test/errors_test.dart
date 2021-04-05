@@ -3,9 +3,6 @@ import 'package:routing_path/routing_path.dart';
 
 void main() {
   group('UnregisteredRouteException', () {
-    test('given null route', () {
-      expect(() => UnregisteredRouteException(null), throwsAssertionError);
-    });
     test('#toString', () {
       const route = '/path/to/somewhere';
 

@@ -1,27 +1,24 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:routing_path/routing_path.dart';
 
+import 'route_registerer_test.mocks.dart';
 import 'utils.dart';
 
-class MockRoute extends Mock implements RouteHandler {}
-
+@GenerateMocks([RouteHandler])
 void main() {
   const path = '/path';
 
-  RouteRegisterer registerer;
+  late RouteRegisterer registerer;
 
   setUp(() {
     registerer = RouteRegisterer();
   });
 
   group('#register', () {
-    test('asserts registrar is not null', () {
-      expect(() => registerer.register(null), throwsAssertionError);
-    });
-
     test('adds only if not already registered', () {
-      final route = MockRoute();
+      final route = MockRouteHandler();
       expect(registerer.routes, isEmpty);
       registerer.register(route);
       expect(registerer.routes, [route]);
@@ -32,36 +29,32 @@ void main() {
     test('adds to the registry in order', () {
       expect(registerer.routes, isEmpty);
 
-      final route0 = MockRoute();
+      final route0 = MockRouteHandler();
       registerer.register(route0);
       expect(registerer.routes, [route0]);
 
-      final route1 = MockRoute();
+      final route1 = MockRouteHandler();
       registerer.register(route1);
       expect(registerer.routes, [route0, route1]);
     });
   });
 
   group('#remove', () {
-    test('given null argument', () {
-      expect(registerer.unregister(null), isFalse);
-    });
-
     group('with an unregistered registrar', () {
       test('when empty', () {
-        expect(registerer.unregister(MockRoute()), isFalse);
+        expect(registerer.unregister(MockRouteHandler()), isFalse);
       });
 
       test('when not empty', () {
-        final route = MockRoute();
+        final route = MockRouteHandler();
         registerer.register(route);
-        expect(registerer.unregister(MockRoute()), isFalse);
+        expect(registerer.unregister(MockRouteHandler()), isFalse);
         expect(registerer.routes, [route]);
       });
     });
 
     test('given a registered registrar', () {
-      final route = MockRoute();
+      final route = MockRouteHandler();
       registerer.register(route);
 
       expect(registerer.unregister(route), isTrue);
@@ -70,10 +63,10 @@ void main() {
   });
 
   group('#canOpen', () {
-    MockRoute route;
+    late MockRouteHandler route;
 
     setUp(() {
-      route = MockRoute();
+      route = MockRouteHandler();
     });
 
     test('when no routes are registered', () {
@@ -102,10 +95,10 @@ void main() {
   });
 
   group('#open', () {
-    MockRoute route;
+    late MockRouteHandler route;
 
     setUp(() {
-      route = MockRoute();
+      route = MockRouteHandler();
     });
 
     test('when no routes are registered', () {
@@ -151,11 +144,12 @@ void main() {
     });
 
     test('verifies registries in order', () async {
-      final routes = List.generate(3, (_) => MockRoute());
+      final routes = List.generate(3, (_) => MockRouteHandler());
       routes.forEach(registerer.register);
 
       when(routes[0].canOpen(any)).thenReturn(false);
       when(routes[1].canOpen(any)).thenReturn(true);
+      when(routes[1].open(path, null)).thenAnswer((_) async => {});
       when(routes[2].canOpen(any)).thenReturn(true);
 
       await expectLater(registerer.open<dynamic>(path), completes);

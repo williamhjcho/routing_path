@@ -1,20 +1,21 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Router;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:routing_path/routing_path.dart';
 
 class ConcreteRouter extends Router {
-  const ConcreteRouter({Key key, Widget child}) : super(key: key, child: child);
+  const ConcreteRouter({Key? key, required Widget child})
+      : super(key: key, child: child);
 
   @override
   bool canOpen(String path) => false;
 
   @override
-  Future<T> open<T>(String path, [dynamic arguments]) =>
+  Future<T?> open<T>(String path, [RouteArguments? arguments]) =>
       Future.error('Some error');
 }
 
 void main() {
-  BuildContext capturedContext;
+  BuildContext? capturedContext;
 
   final builder = Builder(builder: (context) {
     capturedContext = context;
@@ -34,17 +35,17 @@ void main() {
     testWidgets('when in hierarchy', (tester) async {
       final router = ConcreteRouter(child: builder);
       await tester.pumpWidget(router);
-      expect(Router.of(capturedContext), same(router));
+      expect(Router.of(capturedContext!), same(router));
     });
 
     testWidgets('when not in hierarchy', (tester) async {
       await tester.pumpWidget(builder);
-      expect(Router.of(capturedContext), isNull);
+      expect(() => Router.of(capturedContext!), throwsFlutterError);
     });
 
     testWidgets('when there are multiple routers in the hierarchy',
         (tester) async {
-      BuildContext rootContext, subContext;
+      late BuildContext rootContext, subContext;
 
       final subRouter = ConcreteRouter(child: Builder(builder: (context) {
         subContext = context;
