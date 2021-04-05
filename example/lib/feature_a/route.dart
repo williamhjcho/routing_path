@@ -8,10 +8,10 @@ class FeatureARoute extends NavigationRouteHandler {
   bool canOpen(String path) => path == '/feature-a';
 
   @override
-  Route buildRoute(String path, [RouteArguments arguments]) {
+  Route<T> buildRoute<T>(String path, [RouteArguments? arguments]) {
     return MaterialPageRoute(
       builder: (context) => FeatureAHomePage(
-        openedBy: arguments['opened_by'],
+        openedBy: arguments?['opened_by'],
       ),
     );
   }
