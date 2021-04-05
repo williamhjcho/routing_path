@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
         // it could be declared here in `builder`, or it could wrap the whole
         // `MaterialApp` widget. It must be accessible for all descendant
         // widgets on the widget tree (`BuildContext`)
-        return MainAppRouter(child: child);
+        return MainAppRouter(child: child!);
       },
       home: MainHomePage(),
     );
@@ -28,8 +28,8 @@ class MyApp extends StatelessWidget {
 /// This is the main `Router` instance that will be inserted into the
 /// widget tree. It is responsible for registering and opening [RouteHandler]s
 /// when a `Router.of(context).open(...)` is called.
-class MainAppRouter extends Router with RouteRegistererMixin {
-  MainAppRouter({Widget child}) : super(child: child);
+class MainAppRouter extends PathRouter with RouteRegistererMixin {
+  MainAppRouter({required Widget child}) : super(child: child);
 
   @override
   final List<RouteHandler> routes = [
@@ -66,9 +66,12 @@ class MainHomePage extends StatelessWidget {
               style: theme.textTheme.bodyText2,
             ),
             const SizedBox(height: 24),
-            OutlineButton(
-              textColor: Colors.deepPurpleAccent,
-              onPressed: () => Router.of(context).open(
+            OutlinedButton(
+              style: ButtonStyle(
+                foregroundColor:
+                    MaterialStateProperty.all(Colors.deepPurpleAccent),
+              ),
+              onPressed: () => PathRouter.of(context).open(
                 '/feature-a',
                 RouteArguments({'opened_by': 'MAIN HOME'}),
               ),
@@ -77,9 +80,11 @@ class MainHomePage extends StatelessWidget {
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
-            OutlineButton(
-              textColor: Colors.indigo,
-              onPressed: () => Router.of(context).open(
+            OutlinedButton(
+              style: ButtonStyle(
+                foregroundColor: MaterialStateProperty.all(Colors.indigo),
+              ),
+              onPressed: () => PathRouter.of(context).open(
                 '/feature-b',
                 RouteArguments({'opened_by': 'MAIN HOME'}),
               ),

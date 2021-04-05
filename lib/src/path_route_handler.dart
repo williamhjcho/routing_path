@@ -14,11 +14,12 @@ import 'utils/path_matcher.dart';
 /// * [NavigationRouteHandler] the base visual route handler
 /// * [PathRouteHandlerMixin] for the core implementation
 abstract class PathRouteHandler with PathRouteHandlerMixin {
-  PathRouteHandler(String path, [String variablePattern])
-      : assert(path != null),
-        super() {
-    setPattern(path, variablePattern);
-  }
+  PathRouteHandler(String path, [String? variablePattern])
+      : pattern = buildPathPattern(path, variablePattern: variablePattern),
+        super();
+
+  @override
+  final RegExp pattern;
 }
 
 /// The [PathRouteHandler] core implementation for [RouteHandler]s.
@@ -29,17 +30,7 @@ mixin PathRouteHandlerMixin implements RouteHandler {
   /// `/path/:id/to/:name`
   ///
   /// A simple path with no names is also acceptable.
-  ///
-  /// Use [setPattern] to update its value
-  RegExp pattern;
-
-  /// Updates the [pattern] given a [path] and its [variablePattern]s.
-  ///
-  /// [path] cannot be null.
-  void setPattern(String path, [String variablePattern]) {
-    assert(path != null);
-    pattern = buildPathPattern(path, variablePattern: variablePattern);
-  }
+  RegExp get pattern;
 
   @override
   bool canOpen(String path) => pathMatches(pattern, path) != null;
@@ -47,7 +38,7 @@ mixin PathRouteHandlerMixin implements RouteHandler {
   /// Replaces the matches (if any) from [path] into [arguments].
   ///
   /// If [arguments] is null, a new one is created.
-  RouteArguments replaceMatches(String path, RouteArguments arguments) {
+  RouteArguments? replaceMatches(String path, RouteArguments? arguments) {
     final matches = pathMatches(pattern, path);
     if (matches != null) {
       arguments ??= RouteArguments({});

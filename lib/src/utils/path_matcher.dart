@@ -10,15 +10,21 @@ const defaultPathPattern = '[a-zA-Z0-9-_]+';
 /// - path '/path/123/something': returns {'id': '123'}
 /// - path '/path/123': returns null
 ///
-Map<String, String> pathMatches(RegExp pattern, String path) {
+Map<String, String>? pathMatches(RegExp pattern, String path) {
   path = path.trim().split('/').where((s) => s.isNotEmpty).join('/');
   final match = pattern.firstMatch(path);
   if (match == null) return null;
 
-  return <String, String>{
-    if (match.groupCount > 0)
-      for (final name in match.groupNames) name: match.namedGroup(name),
-  };
+  final result = <String, String>{};
+  if (match.groupCount > 0) {
+    for (final name in match.groupNames) {
+      final namedGroup = match.namedGroup(name);
+      if (namedGroup != null) {
+        result[name] = namedGroup;
+      }
+    }
+  }
+  return result;
 }
 
 /// Builds a [RegExp] pattern based on a [path].
@@ -32,7 +38,7 @@ Map<String, String> pathMatches(RegExp pattern, String path) {
 /// '/some/path/:id/:value': returns a pattern that captures 'id' and 'value'
 RegExp buildPathPattern(
   String path, {
-  String variablePattern,
+  String? variablePattern,
 }) {
   variablePattern ??= defaultPathPattern;
   final paths = path.split('/').where((s) => s.isNotEmpty);

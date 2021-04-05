@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:routing_path/routing_path.dart';
 
 class FeatureBHomePage extends StatelessWidget {
-  const FeatureBHomePage({Key key, @required this.openedBy}) : super(key: key);
+  const FeatureBHomePage({Key? key, required this.openedBy}) : super(key: key);
 
   final String openedBy;
 
@@ -21,9 +21,12 @@ class FeatureBHomePage extends StatelessWidget {
           children: <Widget>[
             Text('This page was opened by "$openedBy"'),
             const SizedBox(height: 16),
-            OutlineButton(
-              textColor: Colors.deepPurpleAccent,
-              onPressed: () => Router.of(context).open(
+            OutlinedButton(
+              style: ButtonStyle(
+                foregroundColor:
+                    MaterialStateProperty.all(Colors.deepPurpleAccent),
+              ),
+              onPressed: () => PathRouter.of(context).open(
                 '/feature-a',
                 RouteArguments({'opened_by': 'FEATURE B'}),
               ),

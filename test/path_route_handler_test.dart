@@ -1,7 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/annotations.dart';
 import 'package:routing_path/routing_path.dart';
 
-import 'utils.dart';
+import 'path_route_handler_test.mocks.dart';
 
 class _ConcreteRouteHandler extends PathRouteHandler {
   _ConcreteRouteHandler(String path) : super(path);
@@ -9,19 +10,16 @@ class _ConcreteRouteHandler extends PathRouteHandler {
   final MockPathRouteHandler mock = MockPathRouteHandler();
 
   @override
-  Future<T> open<T>(String path, [RouteArguments arguments]) =>
+  Future<T?> open<T>(String path, [RouteArguments? arguments]) =>
       mock.open(path, arguments);
 }
 
+@GenerateMocks([PathRouteHandler])
 void main() {
-  _ConcreteRouteHandler route;
+  late _ConcreteRouteHandler route;
 
   setUp(() {
     route = _ConcreteRouteHandler('/path/:id/:name');
-  });
-
-  test('given null path', () {
-    expect(() => _ConcreteRouteHandler(null), throwsAssertionError);
   });
 
   test('given a path', () {
@@ -41,18 +39,6 @@ void main() {
       expect(route.canOpen('/path/123'), isFalse);
       expect(route.canOpen('/path'), isFalse);
       expect(route.canOpen('/'), isFalse);
-    });
-  });
-
-  group('#setPattern', () {
-    test('given a null path', () {
-      expect(() => route.setPattern(null), throwsAssertionError);
-    });
-
-    test('given a new path', () {
-      final currentPattern = route.pattern;
-      route.setPattern('/new/path');
-      expect(route.pattern, isNot(currentPattern));
     });
   });
 
