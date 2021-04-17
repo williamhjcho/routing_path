@@ -60,6 +60,46 @@ void main() {
       expect(PathRouter.of(rootContext), same(rootRouter));
       expect(PathRouter.of(subContext), same(subRouter));
     });
+
+    testWidgets('does not depend on context', (tester) async {
+      final builder = Builder(
+        builder: expectAsync1(
+          (context) => Container(),
+          // will only be called once since the ancestor doesn't propagate
+          // changes
+          count: 1,
+        ),
+      );
+      // pumping first instance
+      await tester.pumpWidget(_ConcretePathRouter(child: builder));
+
+      // pumping new instance
+      await tester.pumpWidget(_ConcretePathRouter(child: builder));
+    });
+
+    testWidgets(
+      'StatefulWidgets can call at appropriate times',
+      (tester) async {
+        await tester.pumpWidget(
+          _ConcretePathRouter(
+            child: _CustomStateful(
+              onInitState: expectAsync1(
+                (context) => expect(PathRouter.of(context), isNotNull),
+                count: 1,
+              ),
+              onBuild: expectAsync1(
+                (context) => expect(PathRouter.of(context), isNotNull),
+                count: 1,
+              ),
+              onDidChangeDependencies: expectAsync1(
+                (context) => expect(PathRouter.of(context), isNotNull),
+                count: 1,
+              ),
+            ),
+          ),
+        );
+      },
+    );
   });
 
   group('.maybeOf', () {
@@ -92,4 +132,40 @@ void main() {
       expect(PathRouter.maybeOf(subContext), same(subRouter));
     });
   });
+}
+
+class _CustomStateful extends StatefulWidget {
+  const _CustomStateful({
+    Key? key,
+    this.onInitState,
+    this.onBuild,
+    this.onDidChangeDependencies,
+  }) : super(key: key);
+
+  final ValueSetter<BuildContext>? onInitState;
+  final ValueSetter<BuildContext>? onBuild;
+  final ValueSetter<BuildContext>? onDidChangeDependencies;
+
+  @override
+  _CustomStatefulState createState() => _CustomStatefulState();
+}
+
+class _CustomStatefulState extends State<_CustomStateful> {
+  @override
+  void initState() {
+    super.initState();
+    widget.onInitState?.call(context);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    widget.onDidChangeDependencies?.call(context);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    widget.onBuild?.call(context);
+    return Container();
+  }
 }

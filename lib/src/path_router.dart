@@ -22,30 +22,33 @@ abstract class PathRouter extends StatelessWidget implements RouteHandler {
   Widget build(BuildContext context) =>
       _InheritedRouter(router: this, child: child);
 
-  /// Attempts to retrieve the closest (inherited) instance of this class that
+  /// Attempts to retrieve the closest (inherited) instance of [PathRouter] that
   /// encloses the given [context].
   ///
-  /// May return null if not found.
+  /// Throws if there is no ancestor [PathRouter] in the [context].
   static PathRouter of(BuildContext context) {
-    final inheritedRouter =
-        context.dependOnInheritedWidgetOfExactType<_InheritedRouter>();
-    assert(() {
-      if (inheritedRouter == null) {
-        throw FlutterError(
-          'PathRouter operation requested with a context that does not include '
-          'a PathRouter.\n'
-          'The context used to access the PathRouter must be that of a widget '
-          'that is a descendant of a PathRouter widget.',
-        );
-      }
-      return true;
-    }());
-    return inheritedRouter!.router;
+    final inheritedElement =
+        context.getElementForInheritedWidgetOfExactType<_InheritedRouter>();
+    if (inheritedElement == null) {
+      throw FlutterError(
+        'PathRouter operation requested with a context that does not include '
+        'a PathRouter.\n'
+        'The context used to access the PathRouter must be that of a widget '
+        'that is a descendant of a PathRouter widget.',
+      );
+    }
+    final inheritedRouter = inheritedElement.widget as _InheritedRouter;
+    return inheritedRouter.router;
   }
 
+  /// Attempts to retrieve the closest (inherited) instance of [PathRouter] that
+  /// encloses the given [context].
+  ///
+  /// Will return null if there is no ancestor [PathRouter] in the [context]..
   static PathRouter? maybeOf(BuildContext context) {
-    final inheritedRouter =
-        context.dependOnInheritedWidgetOfExactType<_InheritedRouter>();
+    final inheritedElement =
+        context.getElementForInheritedWidgetOfExactType<_InheritedRouter>();
+    final inheritedRouter = inheritedElement?.widget as _InheritedRouter?;
     return inheritedRouter?.router;
   }
 }
@@ -60,6 +63,5 @@ class _InheritedRouter extends InheritedWidget {
   final PathRouter router;
 
   @override
-  bool updateShouldNotify(_InheritedRouter oldWidget) =>
-      oldWidget.router != router;
+  bool updateShouldNotify(_InheritedRouter oldWidget) => false;
 }

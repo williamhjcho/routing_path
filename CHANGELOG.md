@@ -1,6 +1,8 @@
 ## Next version
 
 * Renamed `PathRouteHandler` to `PatternRouteHandler`
+* Refactor `PathRouter.of` to not depend on ancestor
+  It means it is now safe to call `PathRouter.of` at `initState` and other places of a `StatefulWidget`
 
 ## [0.1.0-nullsafety.0]
 
