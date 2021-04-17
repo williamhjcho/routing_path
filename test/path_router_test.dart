@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:routing_path/routing_path.dart';
 
-class ConcreteRouter extends PathRouter {
-  const ConcreteRouter({Key? key, required Widget child})
+class _ConcretePathRouter extends PathRouter {
+  const _ConcretePathRouter({Key? key, required Widget child})
       : super(key: key, child: child);
 
   @override
@@ -27,13 +27,13 @@ void main() {
   });
 
   testWidgets('given child', (tester) async {
-    await tester.pumpWidget(ConcreteRouter(child: builder));
+    await tester.pumpWidget(_ConcretePathRouter(child: builder));
     expect(find.byWidget(builder), findsOneWidget);
   });
 
   group('.of', () {
     testWidgets('when in hierarchy', (tester) async {
-      final router = ConcreteRouter(child: builder);
+      final router = _ConcretePathRouter(child: builder);
       await tester.pumpWidget(router);
       expect(PathRouter.of(capturedContext!), same(router));
     });
@@ -47,11 +47,11 @@ void main() {
         (tester) async {
       late BuildContext rootContext, subContext;
 
-      final subRouter = ConcreteRouter(child: Builder(builder: (context) {
+      final subRouter = _ConcretePathRouter(child: Builder(builder: (context) {
         subContext = context;
         return Container();
       }));
-      final rootRouter = ConcreteRouter(child: Builder(builder: (context) {
+      final rootRouter = _ConcretePathRouter(child: Builder(builder: (context) {
         rootContext = context;
         return subRouter;
       }));
@@ -64,7 +64,7 @@ void main() {
 
   group('.maybeOf', () {
     testWidgets('when in hierarchy', (tester) async {
-      final router = ConcreteRouter(child: builder);
+      final router = _ConcretePathRouter(child: builder);
       await tester.pumpWidget(router);
       expect(PathRouter.maybeOf(capturedContext!), same(router));
     });
@@ -78,11 +78,11 @@ void main() {
         (tester) async {
       late BuildContext rootContext, subContext;
 
-      final subRouter = ConcreteRouter(child: Builder(builder: (context) {
+      final subRouter = _ConcretePathRouter(child: Builder(builder: (context) {
         subContext = context;
         return Container();
       }));
-      final rootRouter = ConcreteRouter(child: Builder(builder: (context) {
+      final rootRouter = _ConcretePathRouter(child: Builder(builder: (context) {
         rootContext = context;
         return subRouter;
       }));

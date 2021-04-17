@@ -7,13 +7,13 @@ import 'route_arguments.dart';
 /// by calling [open] given the arguments.
 ///
 /// To register a [RouteHandler] into the routing system, it must be added under
-/// a [Router]. Due to how the abstraction is laid out, it can also be under
+/// a [PathRouter]. Due to how the abstraction is laid out, it can also be under
 /// another [RouteHandler] (or [RouteRegistererMixin]).
 ///
 /// To open a [RouteHandler]:
 ///
 /// ```dart
-/// Router.of(context).open(path);
+/// PathRouter.of(context).open(path);
 /// ```
 ///
 /// See also:
@@ -21,7 +21,7 @@ import 'route_arguments.dart';
 /// * [NavigationRouteHandler] the base visual route handler
 /// * [PathRouteHandler] a patterned path route handler
 /// * [RouteRegisterer] the base route registerer
-/// * [Router] the base interface for opening a route
+/// * [PathRouter] the base interface for opening a route
 abstract class RouteHandler {
   /// Returns if this route can be open a given [path].
   bool canOpen(String path);

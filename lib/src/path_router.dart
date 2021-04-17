@@ -10,7 +10,7 @@ import 'route_handler.dart';
 /// Typical usage is as follows:
 ///
 /// ```dart
-/// Router.of(context).open(...);
+/// PathRouter.of(context).open(...);
 /// ```
 abstract class PathRouter extends StatelessWidget implements RouteHandler {
   const PathRouter({Key? key, required this.child}) : super(key: key);
@@ -32,10 +32,10 @@ abstract class PathRouter extends StatelessWidget implements RouteHandler {
     assert(() {
       if (inheritedRouter == null) {
         throw FlutterError(
-          'Router operation requested with a context that does not include '
-          'a Router.\n'
-          'The context used to access the Router must be that of a widget that '
-          'is a descendant of a Router widget.',
+          'PathRouter operation requested with a context that does not include '
+          'a PathRouter.\n'
+          'The context used to access the PathRouter must be that of a widget '
+          'that is a descendant of a PathRouter widget.',
         );
       }
       return true;

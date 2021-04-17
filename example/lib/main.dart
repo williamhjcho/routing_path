@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
 
 /// This is the main `Router` instance that will be inserted into the
 /// widget tree. It is responsible for registering and opening [RouteHandler]s
-/// when a `Router.of(context).open(...)` is called.
+/// when a `PathRouter.of(context).open(...)` is called.
 class MainAppRouter extends PathRouter with RouteRegistererMixin {
   MainAppRouter({required Widget child}) : super(child: child);
 
