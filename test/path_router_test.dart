@@ -10,7 +10,7 @@ class _ConcretePathRouter extends PathRouter {
   bool canOpen(String path) => false;
 
   @override
-  Future<T?> open<T>(String path, [RouteArguments? arguments]) =>
+  Future<dynamic> open(String path, [RouteArguments? arguments]) =>
       Future.error('Some error');
 }
 

@@ -12,7 +12,8 @@ import 'route_handler.dart';
 /// ```dart
 /// PathRouter.of(context).open(...);
 /// ```
-abstract class PathRouter extends StatelessWidget implements RouteHandler {
+abstract class PathRouter extends StatelessWidget
+    implements RouteHandler<dynamic> {
   const PathRouter({Key? key, required this.child}) : super(key: key);
 
   /// {@macro flutter.widgets.child}

@@ -17,18 +17,18 @@ class _FakeRoute<T> extends _i1.Fake implements _i2.Route<T> {}
 /// A class which mocks [NavigationRouteHandler].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockNavigationRouteHandler extends _i1.Mock
-    implements _i3.NavigationRouteHandler {
+class MockNavigationRouteHandler<T extends Object?> extends _i1.Mock
+    implements _i3.NavigationRouteHandler<T> {
   MockNavigationRouteHandler() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i4.Future<T?> open<T>(String? path, [_i5.RouteArguments? arguments]) =>
+  _i4.Future<T?> open(String? path, [_i5.RouteArguments? arguments]) =>
       (super.noSuchMethod(Invocation.method(#open, [path, arguments]),
           returnValue: Future.value(null)) as _i4.Future<T?>);
   @override
-  _i2.Route<T> buildRoute<T>(String? path, [_i5.RouteArguments? arguments]) =>
+  _i2.Route<T> buildRoute(String? path, [_i5.RouteArguments? arguments]) =>
       (super.noSuchMethod(Invocation.method(#buildRoute, [path, arguments]),
           returnValue: _FakeRoute<T>()) as _i2.Route<T>);
 }

@@ -14,8 +14,8 @@ class _FakeRegExp extends _i1.Fake implements RegExp {}
 /// A class which mocks [PatternRouteHandler].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockPatternRouteHandler extends _i1.Mock
-    implements _i2.PatternRouteHandler {
+class MockPatternRouteHandler<T extends Object?> extends _i1.Mock
+    implements _i2.PatternRouteHandler<T> {
   MockPatternRouteHandler() {
     _i1.throwOnMissingStub(this);
   }

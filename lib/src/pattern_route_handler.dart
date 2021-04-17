@@ -13,7 +13,8 @@ import 'utils/path_matcher.dart';
 ///
 /// * [NavigationRouteHandler] the base visual route handler
 /// * [PatternRouteHandlerMixin] for the core implementation
-abstract class PatternRouteHandler with PatternRouteHandlerMixin {
+abstract class PatternRouteHandler<T extends Object?>
+    with PatternRouteHandlerMixin<T> {
   PatternRouteHandler(String path, [String? variablePattern])
       : pattern = buildPathPattern(path, variablePattern: variablePattern),
         super();
@@ -23,7 +24,7 @@ abstract class PatternRouteHandler with PatternRouteHandlerMixin {
 }
 
 /// The [PatternRouteHandler] core implementation for [RouteHandler]s.
-mixin PatternRouteHandlerMixin implements RouteHandler {
+mixin PatternRouteHandlerMixin<T extends Object?> implements RouteHandler<T> {
   /// The path pattern to be used for matching this route.
   ///
   /// Cannot be null and should have a pattern like

@@ -14,7 +14,8 @@ import 'package:routing_path/src/route_handler.dart' as _i2;
 /// A class which mocks [RouteHandler].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockRouteHandler extends _i1.Mock implements _i2.RouteHandler {
+class MockRouteHandler<T extends Object?> extends _i1.Mock
+    implements _i2.RouteHandler<T> {
   MockRouteHandler() {
     _i1.throwOnMissingStub(this);
   }
@@ -24,7 +25,7 @@ class MockRouteHandler extends _i1.Mock implements _i2.RouteHandler {
           .noSuchMethod(Invocation.method(#canOpen, [path]), returnValue: false)
       as bool);
   @override
-  _i3.Future<T?> open<T>(String? path, [_i4.RouteArguments? arguments]) =>
+  _i3.Future<T?> open(String? path, [_i4.RouteArguments? arguments]) =>
       (super.noSuchMethod(Invocation.method(#open, [path, arguments]),
           returnValue: Future.value(null)) as _i3.Future<T?>);
 }

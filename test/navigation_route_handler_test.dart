@@ -6,17 +6,17 @@ import 'package:routing_path/routing_path.dart';
 
 import 'navigation_route_handler_test.mocks.dart';
 
-class _ConcreteRouteHandler extends NavigationRouteHandler {
+class _ConcreteRouteHandler<T> extends NavigationRouteHandler<T> {
   _ConcreteRouteHandler([GlobalKey<NavigatorState>? navigatorKey])
       : super(navigatorKey: navigatorKey);
 
-  final MockNavigationRouteHandler mock = MockNavigationRouteHandler();
+  final MockNavigationRouteHandler<T> mock = MockNavigationRouteHandler();
 
   @override
   bool canOpen(String path) => mock.canOpen(path);
 
   @override
-  Route<T> buildRoute<T>(String path, [RouteArguments? arguments]) =>
+  Route<T> buildRoute(String path, [RouteArguments? arguments]) =>
       mock.buildRoute(path, arguments);
 }
 
