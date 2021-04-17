@@ -1,3 +1,7 @@
+## Next version
+
+* Renamed `PathRouteHandler` to `PatternRouteHandler`
+
 ## [0.1.0-nullsafety.0]
 
 * Migrates to null-safety

@@ -12,9 +12,9 @@ import 'utils/path_matcher.dart';
 /// See also:
 ///
 /// * [NavigationRouteHandler] the base visual route handler
-/// * [PathRouteHandlerMixin] for the core implementation
-abstract class PathRouteHandler with PathRouteHandlerMixin {
-  PathRouteHandler(String path, [String? variablePattern])
+/// * [PatternRouteHandlerMixin] for the core implementation
+abstract class PatternRouteHandler with PatternRouteHandlerMixin {
+  PatternRouteHandler(String path, [String? variablePattern])
       : pattern = buildPathPattern(path, variablePattern: variablePattern),
         super();
 
@@ -22,8 +22,8 @@ abstract class PathRouteHandler with PathRouteHandlerMixin {
   final RegExp pattern;
 }
 
-/// The [PathRouteHandler] core implementation for [RouteHandler]s.
-mixin PathRouteHandlerMixin implements RouteHandler {
+/// The [PatternRouteHandler] core implementation for [RouteHandler]s.
+mixin PatternRouteHandlerMixin implements RouteHandler {
   /// The path pattern to be used for matching this route.
   ///
   /// Cannot be null and should have a pattern like

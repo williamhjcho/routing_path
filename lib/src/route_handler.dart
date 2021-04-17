@@ -19,7 +19,7 @@ import 'route_arguments.dart';
 /// See also:
 ///
 /// * [NavigationRouteHandler] the base visual route handler
-/// * [PathRouteHandler] a patterned path route handler
+/// * [PatternRouteHandler] a patterned path route handler
 /// * [RouteRegisterer] the base route registerer
 /// * [PathRouter] the base interface for opening a route
 abstract class RouteHandler {
