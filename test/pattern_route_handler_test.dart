@@ -2,19 +2,19 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:routing_path/routing_path.dart';
 
-import 'path_route_handler_test.mocks.dart';
+import 'pattern_route_handler_test.mocks.dart';
 
-class _ConcreteRouteHandler extends PathRouteHandler {
+class _ConcreteRouteHandler<T> extends PatternRouteHandler<T> {
   _ConcreteRouteHandler(String path) : super(path);
 
-  final MockPathRouteHandler mock = MockPathRouteHandler();
+  final MockPatternRouteHandler<T> mock = MockPatternRouteHandler<T>();
 
   @override
-  Future<T?> open<T>(String path, [RouteArguments? arguments]) =>
+  Future<T?> open(String path, [RouteArguments? arguments]) =>
       mock.open(path, arguments);
 }
 
-@GenerateMocks([PathRouteHandler])
+@GenerateMocks([PatternRouteHandler])
 void main() {
   late _ConcreteRouteHandler route;
 

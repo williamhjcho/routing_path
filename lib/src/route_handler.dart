@@ -7,22 +7,22 @@ import 'route_arguments.dart';
 /// by calling [open] given the arguments.
 ///
 /// To register a [RouteHandler] into the routing system, it must be added under
-/// a [Router]. Due to how the abstraction is laid out, it can also be under
+/// a [PathRouter]. Due to how the abstraction is laid out, it can also be under
 /// another [RouteHandler] (or [RouteRegistererMixin]).
 ///
 /// To open a [RouteHandler]:
 ///
 /// ```dart
-/// Router.of(context).open(path);
+/// PathRouter.of(context).open(path);
 /// ```
 ///
 /// See also:
 ///
 /// * [NavigationRouteHandler] the base visual route handler
-/// * [PathRouteHandler] a patterned path route handler
+/// * [PatternRouteHandler] a patterned path route handler
 /// * [RouteRegisterer] the base route registerer
-/// * [Router] the base interface for opening a route
-abstract class RouteHandler {
+/// * [PathRouter] the base interface for opening a route
+abstract class RouteHandler<T extends Object?> {
   /// Returns if this route can be open a given [path].
   bool canOpen(String path);
 
@@ -30,7 +30,7 @@ abstract class RouteHandler {
   ///
   /// The [arguments] can be null and will be given to the route if it is able
   /// to be opened.
-  Future<T?> open<T>(String path, [RouteArguments? arguments]);
+  Future<T?> open(String path, [RouteArguments? arguments]);
 }
 
 /// Simple Route aggregator that keeps track of registered routes.
@@ -60,7 +60,7 @@ class RouteRegisterer with RouteRegistererMixin {
 ///
 /// * [RouteHandler] the base route interface
 /// * [RouteRegisterer] a concrete base implementation for this mixin
-mixin RouteRegistererMixin implements RouteHandler {
+mixin RouteRegistererMixin implements RouteHandler<dynamic> {
   /// The currently registered [RouteHandler]s.
   ///
   /// The order where they were registered is the same which [RouteHandler] is
@@ -101,7 +101,7 @@ mixin RouteRegistererMixin implements RouteHandler {
   ///
   /// if a capable route isn't found throws a [UnregisteredRouteException].
   @override
-  Future<T?> open<T>(String path, [RouteArguments? arguments]) async {
+  Future<dynamic> open(String path, [RouteArguments? arguments]) async {
     final route = routes.firstWhere(
       (route) => route.canOpen(path),
       orElse: () => throw UnregisteredRouteException(path, arguments),

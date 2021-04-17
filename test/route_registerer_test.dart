@@ -103,7 +103,7 @@ void main() {
 
     test('when no routes are registered', () {
       expect(
-        registerer.open<dynamic>(path),
+        registerer.open(path),
         throwsUnregisteredRouteException,
       );
     });
@@ -112,7 +112,7 @@ void main() {
       when(route.canOpen(any)).thenReturn(false);
       registerer.register(route);
       expect(
-        () => registerer.open<dynamic>(path),
+        () => registerer.open(path),
         throwsUnregisteredRouteException,
       );
     });
@@ -120,26 +120,26 @@ void main() {
     group('when a capable route is registered', () {
       setUp(() {
         when(route.canOpen(any)).thenReturn(true);
-        when(route.open<dynamic>(any, any)).thenAnswer((_) async {});
+        when(route.open(any, any)).thenAnswer((_) async {});
         registerer.register(route);
       });
 
       test('calls route #open once', () async {
-        await expectLater(registerer.open<dynamic>(path), completes);
-        verify(route.open<dynamic>(path)).called(1);
+        await expectLater(registerer.open(path), completes);
+        verify(route.open(path)).called(1);
       });
 
       test('sends the arguments forward', () async {
         final arguments = RouteArguments({'': 'My arguments'});
-        await expectLater(registerer.open<dynamic>(path, arguments), completes);
-        verify(route.open<dynamic>(path, arguments));
+        await expectLater(registerer.open(path, arguments), completes);
+        verify(route.open(path, arguments));
       });
 
       test('propagates error forward', () {
         const someError = 'Some Error';
-        when(route.open<dynamic>(any, any))
+        when(route.open(any, any))
             .thenAnswer((_) => Future<void>.error(someError));
-        expect(registerer.open<dynamic>(path), throwsA(someError));
+        expect(registerer.open(path), throwsA(someError));
       });
     });
 
@@ -152,11 +152,11 @@ void main() {
       when(routes[1].open(path, null)).thenAnswer((_) async => {});
       when(routes[2].canOpen(any)).thenReturn(true);
 
-      await expectLater(registerer.open<dynamic>(path), completes);
+      await expectLater(registerer.open(path), completes);
 
       verify(routes[0].canOpen(any));
       verify(routes[1].canOpen(any));
-      verify(routes[1].open<dynamic>(path));
+      verify(routes[1].open(path));
       verifyZeroInteractions(routes[2]);
     });
   });

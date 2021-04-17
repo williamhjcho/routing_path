@@ -9,7 +9,8 @@ import 'route_handler.dart';
 /// Subclasses only need to implement [canOpen] and [buildRoute].
 ///
 /// See [NavigationRouteHandlerMixin] for the core implementations.
-abstract class NavigationRouteHandler with NavigationRouteHandlerMixin {
+abstract class NavigationRouteHandler<T extends Object?>
+    with NavigationRouteHandlerMixin<T> {
   /// Creates a route handler that presents [Route]
   ///
   /// The [navigatorKey] is the main navigator where this route will attempt
@@ -31,12 +32,13 @@ abstract class NavigationRouteHandler with NavigationRouteHandlerMixin {
 }
 
 /// The [NavigationRouteHandler] core implementation for custom [RouteHandler]s
-mixin NavigationRouteHandlerMixin implements RouteHandler {
+mixin NavigationRouteHandlerMixin<T extends Object?>
+    implements RouteHandler<T> {
   GlobalKey<NavigatorState>? get navigatorKey => null;
 
   @override
-  Future<T?> open<T>(String path, [RouteArguments? arguments]) {
-    final route = buildRoute<T>(path, arguments);
+  Future<T?> open(String path, [RouteArguments? arguments]) {
+    final route = buildRoute(path, arguments);
     final navigator = navigatorKey ?? NavigationRouteHandler.rootNavigatorKey;
     // TODO: allow other presentation methods (replace, pop replace, etc)
     final navigatorState = navigator.currentState;
@@ -54,5 +56,5 @@ mixin NavigationRouteHandlerMixin implements RouteHandler {
   }
 
   /// Builds the [Route] which will be pushed on top of the navigator key.
-  Route<T> buildRoute<T>(String path, [RouteArguments? arguments]);
+  Route<T> buildRoute(String path, [RouteArguments? arguments]);
 }
